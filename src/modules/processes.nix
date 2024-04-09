@@ -65,7 +65,7 @@ in
         '';
         default = {
           version = "0.5";
-          port = 9999;
+          unix-socket = "${config.devenv.runtime}/pc.sock";
           tui = true;
         };
         example = {
@@ -133,7 +133,7 @@ in
 
       backgroundPID=$!
 
-      stop_up() {
+      down() {
         echo "Stopping processes..."
         kill -TERM $backgroundPID
         wait $backgroundPID
@@ -141,9 +141,9 @@ in
         echo "Processes stopped."
       }
 
-      trap stop_up SIGINT SIGTERM
+      trap down SIGINT SIGTERM
 
-      wait
+      wait $backgroundPID
     '';
 
     ci = [ config.procfileScript ];
